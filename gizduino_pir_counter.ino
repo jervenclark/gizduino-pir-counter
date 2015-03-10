@@ -8,6 +8,7 @@ int pirState = LOW;
 int val = 0;
 int pinSpeaker = 31;
 int vis = 0;
+int invis = 0;
 char lcd_buffer[16];
 LiquidCrystal lcd(21, 20, 19, 18, 17, 16);
 
@@ -65,19 +66,6 @@ void playTone(long duration, int freq, boolean state) {
   }
 }
 
-void displayTime(){
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  byte second, minute, hour, dayOfWeek, dayOfMonth, month, year;
-  getDateDs1307(&second, &minute, &hour, &dayOfWeek, &dayOfMonth, &month, &year);  
-  sprintf(lcd_buffer, " %02d, 20%02d ", dayOfMonth, year );
-  lcd.print(getName(month, 1) + lcd_buffer + getName(dayOfWeek, 0));
-  lcd.setCursor(0, 1);
-  sprintf(lcd_buffer, "%02d:%02d:%02d", hour, minute, second );
-  lcd.print(lcd_buffer);
-  delay(1000);
-}
-
 String getName(byte day, int type){  
   switch(day){
     case 1:      
@@ -121,13 +109,31 @@ String getName(byte day, int type){
 
 void displaySensorActive(){
   vis++;
+  byte second, minute, hour, dayOfWeek, dayOfMonth, month, year;
+  getDateDs1307(&second, &minute, &hour, &dayOfWeek, &dayOfMonth, &month, &year);  
   lcd.clear();
-  lcd.setCursor(0, 0);   
-  sprintf(lcd_buffer, "Sensor Active:");
+  lcd.setCursor(0, 0);  
+  sprintf(lcd_buffer, "Vis (%d) times",vis );
   lcd.print(lcd_buffer);
-  lcd.setCursor(0,1);
-  sprintf(lcd_buffer, "(%d) times",vis );
+  if(hour > 20){
+    invis++;
+    lcd.setCursor(0,1);
+    sprintf(lcd_buffer, "Invis (%d) times",invis );
+    lcd.print(lcd_buffer);
+  }  
+}
+
+void displayTime(){
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  byte second, minute, hour, dayOfWeek, dayOfMonth, month, year;
+  getDateDs1307(&second, &minute, &hour, &dayOfWeek, &dayOfMonth, &month, &year);  
+  sprintf(lcd_buffer, " %02d, 20%02d ", dayOfMonth, year );
+  lcd.print(getName(month, 1) + lcd_buffer + getName(dayOfWeek, 0));
+  lcd.setCursor(0, 1);
+  sprintf(lcd_buffer, "%02d:%02d:%02d", hour, minute, second );
   lcd.print(lcd_buffer);
+  delay(1000);
 }
 
 void setup() {
@@ -140,7 +146,7 @@ void setup() {
   lcd.print("Boot Up ...");
   Wire.begin();
   Serial.begin(9600);
-  setDateDs1307(30, 49, 3, 3, 10, 3, 14);
+  setDateDs1307(30, 55, 20, 3, 10, 3, 14);
 }
 
 void loop() {
@@ -157,5 +163,4 @@ void loop() {
     displayTime();
     pirState = LOW;
   }
-  //displayTime();
 }
