@@ -115,7 +115,7 @@ void displaySensorActive(){
   lcd.setCursor(0, 0);  
   sprintf(lcd_buffer, "Vis (%d) times",vis );
   lcd.print(lcd_buffer);
-  if(hour > 20){
+  if(hour > 20 || hour < 5){
     invis++;
     lcd.setCursor(0,1);
     sprintf(lcd_buffer, "Invis (%d) times",invis );
