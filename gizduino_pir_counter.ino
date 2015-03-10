@@ -9,7 +9,7 @@ int val = 0;
 int pinSpeaker = 31;
 int vis = 0;
 int invis = 0;
-char lcd_buffer[16];
+char lcd_buffer[20];
 LiquidCrystal lcd(21, 20, 19, 18, 17, 16);
 
 byte decToBcd(byte val){
@@ -146,7 +146,7 @@ void setup() {
   lcd.print("Boot Up ...");
   Wire.begin();
   Serial.begin(9600);
-  setDateDs1307(30, 55, 20, 3, 10, 3, 14);
+  setDateDs1307(30, 59, 20, 3, 10, 3, 14);
 }
 
 void loop() {
